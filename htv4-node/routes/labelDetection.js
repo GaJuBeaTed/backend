@@ -28,7 +28,7 @@ const labelRoutes = (app, fs) => {
         });
     };
 
-    ``// [START vision_label_detection]
+    // [START vision_label_detection]
     // Imports the Google Cloud client library
     const vision = require('@google-cloud/vision');
 
@@ -42,7 +42,8 @@ const labelRoutes = (app, fs) => {
         /**
          * TODO(developer): Uncomment the following line before running the sample.
          */
-        const fileName = 'water-bottle.png';
+        list = ['canada-dry-can.jpg', 'canada-dry-bottle.jpg', 'water-bottle.png', 'water-bottle2.jpg'];
+        const fileName = './data/' + list[0];
 
         // Performs label detection on the local file
         client.labelDetection(fileName).then(results=>{
@@ -58,28 +59,42 @@ const labelRoutes = (app, fs) => {
                 }
             }
 
-        // labels.forEach(label => list.push(JSON.stringify(label.description).toLowerCase));
-        // list.push(JSON.stringify(label.description).toLowerCase)
-        switch (choosen_item) {
-            case 'paper':
-                material = 1;
-                break;
-            case 'plastic':
-                material = 2;
-                break;
-            case 'metal':
-                material = 3;
-                break;
-            case 'cardboard':
-                material = 4;
-                break;
-            case 'glass':
-                material = 5;
-                break;
-
-            material = 6;
-
-        }
+            // labels.forEach(label => list.push(JSON.stringify(label.description).toLowerCase));
+            // list.push(JSON.stringify(label.description).toLowerCase)
+            switch (choosen_item) {
+                case choosen_item.include('paper'):
+                case choosen_item.include('mail'):
+                case choosen_item.include('envelope'):
+                case choosen_item.include('flyer'):
+                case choosen_item.include('directories'):
+                case choosen_item.include('magazine'):
+                case choosen_item.include('catalogue'):
+                case choosen_item.include('tissue'):
+                case choosen_item.include('book'):
+                    material = 1;
+                    break;
+                case choosen_item.include('plastic'):
+                    material = 2;
+                    break;
+                case choosen_item.include('metal'):
+                case choosen_item.include('aluminium'):
+                case choosen_item.include('steel'):
+                case choosen_item.include('pans'):
+                case choosen_item.include('tins'):
+                    material = 3;
+                    break;
+                case choosen_item.include('cardboard'):
+                case choosen_item.include('boxboard'):
+                case choosen_item.include('rolls'):
+                case choosen_item.include('carton'):
+                    material = 4;
+                    break;
+                case choosen_item.include('glass'):
+                    material = 5;
+                    break;
+                default:
+                    material = 6;
+            }
 
             final = {
                 "name" : choosen_item.description,
@@ -88,37 +103,39 @@ const labelRoutes = (app, fs) => {
 
             let data = JSON.stringify(final);
             fs.writeFileSync(choosen_item.description + '.json', data);
-
+            return data;
         })
 
-        // READ
-        app.get('/labels', (req, res) => {
-            datapath = req.dataPath; 
-            fs.readFile(dataPath, 'utf8', (err, data) => {
-                if (err) {
-                    throw err;
-                }
-                res.send(JSON.parse(data));
-            });
-        });
-
-        // CREATE
-        app.post('/labels', (req, res) => {
-
-            readFile(data => {
-                const newImageId = Object.keys(data).length + 1;
-
-                data[newImageId.toString()] = req.body;
-
-                writeFile(JSON.stringify(data), () => {
-                    res.status(200).send('new image added');
-                });
-            },
-                true);
-
-        });
-
+    })
+}
 module.exports = labelRoutes;
+        // // READ
+        // app.get('/labels', (req, res) => {
+        //     datapath = req.dataPath; 
+        //     fs.readFile(dataPath, 'utf8', (err, data) => {
+        //         if (err) {
+        //             throw err;
+        //         }
+        //         res.send(JSON.parse(data));
+        //     });
+        // });
+
+        // // CREATE
+        // app.post('/labels', (req, res) => {
+
+        //     readFile(data => {
+        //         const newImageId = Object.keys(data).length + 1;
+
+        //         data[newImageId.toString()] = req.body;
+
+        //         writeFile(JSON.stringify(data), () => {
+        //             res.status(200).send('new image added');
+        //         });
+        //     },
+        //         true);
+
+        // });
+
 
 // [END vision_label_detection]
 

@@ -1,5 +1,6 @@
 // load up our shiny new route for users
 const userRoutes = require('./users');
+const labelRoutes = require('./labelDetection');
 
 const appRouter = (app, fs) => {
 
@@ -9,9 +10,9 @@ const appRouter = (app, fs) => {
         res.send('welcome to the development api-server');
     });
 
-
     // run our user route module here to complete the wire up
     userRoutes(app, fs);
+    labelRoutes(app, fs);
 };
 
 // this line is unchanged
