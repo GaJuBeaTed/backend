@@ -16,11 +16,12 @@ const app = express();
     const fileName = 'water-bottle.png';
   
     // Performs label detection on the local file
-    const [result] = await client.labelDetection(fileName);
-    const labels = result.labelAnnotations;
-    console.log('Labels:');
-    let data = await Response.json()
-    labels.forEach(label => console.log(label.description));
+    client.labelDetection(fileName).then(results=>{
+        const labels = results[0].labelAnnotations;
+        console.log('Labels:');
+        labels.forEach(label => console.log(label.description));
+    })
+
     // [END vision_label_detection]
 
 
