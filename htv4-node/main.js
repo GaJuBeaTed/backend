@@ -1,28 +1,15 @@
+var path = require('path');
 var express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+const fs = require(`fs`);
 
-    // [START vision_label_detection]
-    // Imports the Google Cloud client library
-    const vision = require('@google-cloud/vision');
-  
-    // Creates a client
-    const client = new vision.ImageAnnotatorClient({
-        keyFilename: 'hack-the-valley-iv-8c82146dadac.json'
-    });
-  
-    /**
-     * TODO(developer): Uncomment the following line before running the sample.
-     */
-    const fileName = 'water-bottle.png';
-  
-    // Performs label detection on the local file
-    client.labelDetection(fileName).then(results=>{
-        const labels = results[0].labelAnnotations;
-        console.log('Labels:');
-        labels.forEach(label => console.log(label.description));
-    })
+// configure our express instance with some body-parser settings 
+// including handling JSON data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-    // [END vision_label_detection]
+// this is where we'll handle our various routes from
+const routes = require('./routes/routes.js')(app, fs);
 
-
-app.listen('5000', '127.0.0.1', ()=>console.log('Server is running'));
+const server = app.listen('5000', '127.0.0.1', ()=>console.log('Server is running'));
